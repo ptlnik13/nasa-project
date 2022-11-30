@@ -16,10 +16,37 @@ const launch = {
 saveLaunch(launch);
 const SPACEX_API_URL = 'https://api.spacexdata.com/v4/launches/query';
 
-async function loadLaunchesData() {
-    console.log('Downloading Function Data');
-    const response = await axios.post(`${SPACEX_API_URL}`, {query: {}, options: [{populate: [{path: 'rocket', select: {name: 1}}, {path: 'payloads', select: {customers: 1}}]}]});
 
+async function loadLaunchData() {
+    console.log('Downloading Function Data');
+    const response =await axios.post(SPACEX_API_URL, {
+        query: {},
+        options: {
+            populate: [{
+                path: 'rocket',
+                select: {name: 1}
+            }, {
+                path: 'payloads',
+                select: {customers: 1}
+            }]
+        }
+    });
+    const launchDocs = response.data.docs;
+
+    launchDocs?.forEach(launchDoc => {
+        const payloads = launchDoc['payloads'];
+        const customers = payloads.flatMap((payload) => payload['customers']);
+        const launch = {
+            flightNumber: launchDoc['flight_number'],
+            mission: launchDoc['name'],
+            rocket: launchDoc['rocket']['name'],
+            launchDate: new Date(launchDoc['date_local']),
+            upcoming: launchDoc['upcoming'],
+            success: launchDoc['success'],
+            customers,
+        }
+        console.log(`${launch.flightNumber} ${launch.mission}`)
+    })
 }
 
 async function existsLaunchWithId(launchId) {
@@ -65,4 +92,4 @@ async function abortLaunchById(launchId) {
     return aborted.modifiedCount === 1;
 }
 
-module.exports = {getAllLaunches, scheduleNewLaunch, existsLaunchWithId, abortLaunchById, loadLaunchesData}
+module.exports = {getAllLaunches, scheduleNewLaunch, existsLaunchWithId, abortLaunchById, loadLaunchData}
