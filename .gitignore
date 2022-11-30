@@ -1,7 +1,6 @@
 .idea/
 node_modules/
 server/public /
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -29,3 +28,4 @@ client/yarn-error.log*
 
 #server
 server/node_modules/
+server/.env
