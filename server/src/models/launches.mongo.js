@@ -7,7 +7,7 @@ const launchesSchema = new mongoose.Schema({
     launchDate: {type: Date, required: true},
     mission: {type: String, required: true},
     rocket: {type: String, required: true},
-    target: {type: String, required: true},
+    target: {type: String, /*required: true*/ }, // because spaceX has no target property, and we don't need it too.
     customers: [String],
     upcoming: {type: Boolean, required: true, default: true},
     success: {type: Boolean, required: true, default: true}
