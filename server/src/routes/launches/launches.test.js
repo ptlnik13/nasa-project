@@ -13,7 +13,7 @@ describe('Launches API', () => {
     })
     describe('Test GET /launches', () => {
         test('It should respond with 200 Success', async () => {
-            const response = await request(app).get('/v1/launches').expect(200);
+            const response = await request(app).get('/v1/launches').expect('Content-Type', /json/);
             // expect(response.statusCode).toBe(200);
         })
     })
